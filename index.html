@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kadapa Kaleidoscope | Discover Andhra's Hidden Gem</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper@9.0.0/swiper-bundle.min.css" />
+    <!-- AOS (Animate on Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #d4af37;
+            --secondary: #2c5530;
+            --accent: #b83b5e;
+            --dark: #1a1a2e;
+            --light: #f8f5f2;
+            --text: #333333;
+            --gradient: linear-gradient(135deg, #d4af37 0%, #2c5530 100%);
+            --gradient-reverse: linear-gradient(135deg, #2c5530 0%, #d4af37 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 20px 50px rgba(0, 0, 0, 0.2);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--light);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: var(--transition);
+            background-color: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        header.scrolled {
+            padding: 15px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--gradient);
+            --webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 32px;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            font-size: 16px;
+            position: relative;
+            padding: 5px 0;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .nav-links a:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover:before {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a.active:before {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            background: linear-gradient(rgba(26, 26, 46, 0.8), rgba(44, 85, 48, 0.8)), 
+                        url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 20px;
+            color: white;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+        }
+
+        .typed-text {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            min-height: 60px;
+        }
+
+        .typed-cursor {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--gradient);
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 18px;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-reverse);
+            transition: var(--transition);
+            z-index: 1;
+        }
+
+        .cta-button:hover:before {
+            left: 0;
+        }
+
+        .cta-button span {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Sections Common */
+        section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            display: inline-block;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary);
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Features Section */
+        .features {
+            background-color: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .feature-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+            z-index: 2;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 32px;
+            color: white;
+        }
+
+        .feature-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        /* Historical Sites Section */
+        .historical-sites {
+            background: linear-gradient(135deg, #f8f5f2 0%, #e8f4e8 100%);
+        }
+
+        .sites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .site-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .site-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .site-image {
+            height: 250px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .site-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .site-card:hover .site-image img {
+            transform: scale(1.05);
+        }
+
+        .site-content {
+            padding: 30px;
+        }
+
+        .site-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+
+        .site-content p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .site-tag {
+            display: inline-block;
+            background: var(--gradient);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        /* Local Cuisine Section */
+        .local-cuisine {
+            background-color: white;
+        }
+
+        .restaurant-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .tab-btn {
+            padding: 12px 30px;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--secondary);
+        }
+
+        .tab-btn.active {
+            background: var(--gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .restaurant-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .restaurant-header {
+            padding: 25px 25px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .restaurant-header h3 {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+
+        .restaurant-rating {
+            display: flex;
+            align-items: center;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .restaurant-rating i {
+            margin-right: 5px;
+        }
+
+        .restaurant-body {
+            padding: 20px 25px;
+        }
+
+        .restaurant-info {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .restaurant-info i {
+            color: var(--primary);
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        .menu-highlights {
+            margin-top: 20px;
+        }
+
+        .menu-highlights h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+
+        .menu-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .menu-item {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+
+        /* Accommodation Section */
+        .accommodation {
+            background: linear-gradient(135deg, #f8f5f2 0%, #e8f4e8 100%);
+        }
+
+        .hotel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 35px;
+        }
+
+        .hotel-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .hotel-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .hotel-image {
+            height: 220px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .hotel-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .hotel-card:hover .hotel-image img {
+            transform: scale(1.05);
+        }
+
+        .hotel-content {
+            padding: 25px;
+        }
+
+        .hotel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .hotel-header h3 {
+            font-size: 1.6rem;
+            color: var(--secondary);
+        }
+
+        .hotel-price {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.4rem;
+        }
+
+        .hotel-amenities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .amenity {
+            display: flex;
+            align-items: center;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+
+        .amenity i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+
+        /* Statistics Section */
+        .statistics {
+            background: var(--gradient);
+            color: white;
+            text-align: center;
+        }
+
+        .statistics h2 {
+            color: white;
+        }
+
+        .statistics h2:after {
+            background: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .stat-item {
+            padding: 30px;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .stat-item p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* 3D Globe Container */
+        .globe-container {
+            height: 500px;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-heavy);
+            margin: 60px auto;
+            position: relative;
+        }
+
+        #globeCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .globe-label {
+            position: absolute;
+            background: rgba(26, 26, 46, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 600;
+            z-index: 10;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 80px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--gradient);
+            --webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .footer-description {
+            opacity: 0.8;
+            margin-bottom: 25px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .footer-heading {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-heading:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .newsletter p {
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .newsletter-form {
+            display: flex;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 50px 0 0 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .newsletter-form button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 0 50px 50px 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .newsletter-form button:hover {
+            background: #e6c34e;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+
+        /* Page Transition */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(100%);
+            transition: transform 0.8s ease;
+        }
+
+        .page-transition.active {
+            transform: translateY(0);
+        }
+
+        .transition-logo {
+            font-size: 4rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        /* Media Queries */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: rgba(26, 26, 46, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 50px;
+                transition: var(--transition);
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-links li {
+                margin: 15px 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .typed-text {
+                font-size: 1.4rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .stat-number {
+                font-size: 2.8rem;
+            }
+            
+            .globe-container {
+                height: 400px;
+            }
+            
+            .sites-grid,
+            .restaurant-grid,
+            .hotel-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .cta-button {
+                padding: 12px 30px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Transition Overlay -->
+    <div class="page-transition" id="pageTransition">
+        <div class="transition-logo">
+            <i class="fas fa-map-marked-alt"></i> Kadapa
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-map-marked-alt"></i> Kadapa
+                </a>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="#historical">Historical Sites</a></li>
+                    <li><a href="#cuisine">Local Cuisine</a></li>
+                    <li><a href="#accommodation">Stay & Relax</a></li>
+                    <li><a href="#experiences">Experiences</a></li>
+                </ul>
+                <div class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div id="particles-js"></div>
+        <div class="hero-content">
+            <h1 data-aos="fade-up">Discover Kadapa</h1>
+            <div class="typed-text" data-aos="fade-up" data-aos-delay="300">
+                <span id="typed"></span><span class="typed-cursor">|</span>
+            </div>
+            <a href="#historical" class="cta-button" data-aos="fade-up" data-aos-delay="600">
+                <span>Start Your Journey</span>
+            </a>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator" data-aos="fade-up" data-aos-delay="900">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Explore Section -->
+    <section class="explore" id="explore">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Explore Kadapa</h2>
+                <p>Discover the rich heritage, breathtaking landscapes, and exquisite cuisine of Kadapa, Andhra Pradesh's hidden gem.</p>
+            </div>
+            
+            <!-- 3D Globe -->
+            <div class="globe-container" data-aos="zoom-in">
+                <canvas id="globeCanvas"></canvas>
+                <div class="globe-label">
+                    <i class="fas fa-map-marker-alt"></i> Kadapa, Andhra Pradesh, India
+                </div>
+            </div>
+            
+            <!-- Quick Explore Cards -->
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <h3>Historical Sites</h3>
+                    <p>Explore ancient temples, forts, and monuments that tell the story of Kadapa's rich history.</p>
+                    <a href="#historical" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Explore</a>
+                </div>
+                
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Local Cuisine</h3>
+                    <p>Taste authentic Andhra flavors with Kadapa's unique dishes and traditional cooking methods.</p>
+                    <a href="#cuisine" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Explore</a>
+                </div>
+                
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon">
+                        <i class="fas fa-hotel"></i>
+                    </div>
+                    <h3>Stay & Relax</h3>
+                    <p>Find the perfect accommodation from luxury resorts to budget-friendly hotels.</p>
+                    <a href="#accommodation" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Explore</a>
+                </div>
+                
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-icon">
+                        <i class="fas fa-hiking"></i>
+                    </div>
+                    <h3>Experiences</h3>
+                    <p>Book unique tours, activities, and cultural experiences for an unforgettable journey.</p>
+                    <a href="#experiences" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Explore</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Historical Sites Section -->
+    <section class="historical-sites" id="historical">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Historical Sites of Kadapa</h2>
+                <p>Explore the rich historical heritage of Kadapa through its ancient forts, temples, and monuments.</p>
+            </div>
+            
+            <div class="sites-grid">
+                <!-- Gandikota Fort -->
+                <div class="site-card" data-aos="fade-up">
+                    <div class="site-image">
+                        <img src="https://naturewalkers.in/wp-content/uploads/2021/02/Grand_Canon_of_India_Gandikota-scaled.jpg" alt="Gandikota Fort">
+                    </div>
+                    <div class="site-content">
+                        <span class="site-tag">Fort & Canyon</span>
+                        <h3>Gandikota Fort</h3>
+                        <p>Built in the 13th century on the banks of the Pennar River, Gandikota Fort is known as the "Grand Canyon of India." The fort was constructed by Kakatiya rulers and later controlled by Vijayanagara Empire, Qutb Shahi rulers, and the British.</p>
+                        <p>The fort features 5km long granite walls, Madhavaraya Temple, Ranganatha Swamy Temple, granaries, mosques, and water storage systems. It's a protected monument by ASI and a major tourist attraction.</p>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 15px; display: inline-block;">View on Map</a>
+                    </div>
+                </div>
+                
+                <!-- Siddavatam Fort -->
+                <div class="site-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="site-image">
+                        <img src="https://mindtrip.ai/attractions/0d2b/a14f/8cbc/7cf7/fb46/631e/838c/3a4f" alt="Siddavatam Fort">
+                    </div>
+                    <div class="site-content">
+                        <span class="site-tag">Ancient Fort</span>
+                        <h3>Siddavatam Fort</h3>
+                        <p>Located on the banks of the Pennar River, this 14th century fort was built by Kakatiya rulers. It played a vital role in controlling trade and military routes across the region.</p>
+                        <p>The fort features massive stone walls, bastions, gateways, temples, mosques, and step wells. It came under Vijayanagara Empire, Qutb Shahi dynasty, and Nawabs of Kadapa, showcasing a mix of architectural styles.</p>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 15px; display: inline-block;">View on Map</a>
+                    </div>
+                </div>
+                
+                <!-- Vontimitta Temple -->
+                <div class="site-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="site-image">
+                        <img src="https://cdn.talesofbackpacker.com/wp-content/uploads/2024/08/Vontimitta-Temple-Kodandarama-Swamy-Temple-History-Timings-Entry-Fee.jpg?strip=all&lossy=1&quality=92&webp=90&avif=90&ssl=1" alt="Vontimitta Temple">
+                    </div>
+                    <div class="site-content">
+                        <span class="site-tag">Temple</span>
+                        <h3>Vontimitta Kodanda Rama Swamy Temple</h3>
+                        <p>Constructed in the 16th century under Vijayanagara Empire patronage, this temple is dedicated to Lord Rama, Sita, and Lakshmana. It gained importance during Krishnadevaraya's reign.</p>
+                        <p>Built in classical Vijayanagara style with grand stone pillars, open mandapas, and detailed carvings. Unlike many temples, it doesn't have a traditional gopuram. Associated with saints Bhadrachala Ramadasu and Annamacharya.</p>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 15px; display: inline-block;">View on Map</a>
+                    </div>
+                </div>
+                
+                <!-- Ameen Peer Dargah -->
+                <div class="site-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="site-image">
+                        <img src="https://manaraayalaseema.wordpress.com/wp-content/uploads/2018/04/pexels-photo-460680.jpeg?w=1400" alt="Ameen Peer Dargah">
+                    </div>
+                    <div class="site-content">
+                        <span class="site-tag">Sufi Shrine</span>
+                        <h3>Ameen Peer Dargah</h3>
+                        <p>One of the oldest and most respected Sufi shrines in Rayalaseema, dedicated to Hazrat Shaikh Ameen-ud-Din (17th century). He spread messages of peace, unity, and brotherhood.</p>
+                        <p>Gained importance during Qutb Shahi rule and became a center for spiritual learning and social unity. A symbol of religious tolerance and communal harmony, attracting thousands during Urs festival.</p>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 15px; display: inline-block;">View on Map</a>
+                    </div>
+                </div>
+                
+                <!-- Pushpagiri Temples -->
+                <div class="site-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="site-image">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiK_tzmnNY_HaYUy5i1Pbv9o6wPq3ViKAUnAzL8IWle7T9hMV-ZTFh1xMtXb3YJSFAOxPo3dSFT3HCdbhOQPdYuDxCO6J-YOqWuzVl3JlrwPn-VrGEwC4jiiXKm0Djyfelh4jueIoHR2dUUtJUlhg5K0Qy_ZqxX2C15QAkkiIIUQ7iHylU62xojO8nLoS2c/s2415/Chennakesava-Swamy-Temple-Pushpagiri-Temple-Complex-Kadapa-Andhra-Pradesh-India-1910-Rare-Old-Vintage-Photos%20(1).jpg" alt="Pushpagiri Temples">
+                    </div>
+                    <div class="site-content">
+                        <span class="site-tag">Ancient Temples</span>
+                        <h3>Pushpagiri Temples</h3>
+                        <p>An ancient group of Hindu temples from the 7th century on the banks of Pennar River, dedicated mainly to Lord Shiva. Received patronage from Pallava, Chola, and Vijayanagara rulers.</p>
+                        <p>An important center of Shaivism with early Dravidian-style architecture, stone structures, carved pillars, and inscriptions. Though many structures are in ruins, they remain significant archaeological sites.</p>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 15px; display: inline-block;">View on Map</a>
+                    </div>
+                </div>
+                
+                <!-- Tholi Gadapa Temple -->
+                <div class="site-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="site-image">
+                         <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/8d/89/4c/caption.jpg?w=1200&h=-1&s=1" alt="Tholi Gadapa Temple">
+                    </div>
+                    <div class="site-content">
+                        <span class="site-tag">Sacred Temple</span>
+                        <h3>Tholi Gadapa (Devuni Kadapa)</h3>
+                        <p>An ancient temple dedicated to Lord Venkateswara, considered the first threshold before visiting Tirumala. Dates back to ancient times and associated with Vaishnavism.</p>
+                        <p>Gained prominence during Vijayanagara Empire. Built in traditional South Indian (Dravidian) style. Devotees visit this temple first before proceeding to Tirumala Tirupati.</p>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 15px; display: inline-block;">View on Map</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Local Cuisine Section -->
+    <section class="local-cuisine" id="cuisine">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Local Cuisine & Restaurants</h2>
+                <p>Experience the authentic flavors of Kadapa through its diverse culinary offerings.</p>
+            </div>
+            
+            <div class="restaurant-tabs" data-aos="fade-up">
+                <button class="tab-btn active" data-category="all">All Restaurants</button>
+                <button class="tab-btn" data-category="multi">Multi-Cuisine</button>
+                <button class="tab-btn" data-category="cafe">Café & Snacks</button>
+                <button class="tab-btn" data-category="andhra">Andhra Special</button>
+            </div>
+            
+            <div class="restaurant-grid">
+                <!-- Mayura Gardenia -->
+                <div class="restaurant-card" data-category="multi" data-aos="fade-up">
+                    <div class="restaurant-header">
+                        <h3>Mayura Gardenia</h3>
+                        <div class="restaurant-rating">
+                            <i class="fas fa-star"></i> 4.0/5
+                        </div>
+                    </div>
+                    <div class="restaurant-body">
+                        <div class="restaurant-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Opposite Nehru Park, Cooperative Colony, Kadapa</span>
+                        </div>
+                        <div class="restaurant-info">
+                            <i class="fas fa-clock"></i>
+                            <span>11:00 AM - 11:00 PM</span>
+                        </div>
+                        <div class="restaurant-info">
+                            <i class="fas fa-phone"></i>
+                            <span>+91 93930 80555</span>
+                        </div>
+                        <div class="menu-highlights">
+                            <h4>Menu Highlights</h4>
+                            <div class="menu-items">
+                                <span class="menu-item">Chicken Dum Biryani</span>
+                                <span class="menu-item">Special Chicken Biryani</span>
+                                <span class="menu-item">Mutton Biryani</span>
+                                <span class="menu-item">Chicken Lollipop</span>
+                                <span class="menu-item">Andhra Chicken Curry</span>
+                            </div>
+                        </div>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Book Table</a>
+                    </div>
+                </div>
+                
+                <!-- Sitara Garden Family Restaurant -->
+                <div class="restaurant-card" data-category="multi" data-aos="fade-up" data-aos-delay="100">
+                    <div class="restaurant-header">
+                        <h3>Sitara Garden Family Restaurant</h3>
+                        <div class="restaurant-rating">
+                            <i class="fas fa-star"></i> 4.2/5
+                        </div>
+                    </div>
+                    <div class="restaurant-body">
+                        <div class="restaurant-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>BY Pass Road, beside KIA Motors, Kadapa</span>
+                        </div>
+                        <div class="restaurant-info">
+                            <i class="fas fa-clock"></i>
+                            <span>11:00 AM - 11:00 PM</span>
+                        </div>
+                        <div class="menu-highlights">
+                            <h4>Menu Highlights</h4>
+                            <div class="menu-items">
+                                <span class="menu-item">Hyderabadi Dum Biryani</span>
+                                <span class="menu-item">Special Chicken Biryani</span>
+                                <span class="menu-item">Tandoori Items</span>
+                                <span class="menu-item">Andhra Style Curries</span>
+                                <span class="menu-item">Grilled Kebabs</span>
+                            </div>
+                        </div>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Book Table</a>
+                    </div>
+                </div>
+                
+                <!-- Bahar Café -->
+                <div class="restaurant-card" data-category="cafe" data-aos="fade-up" data-aos-delay="200">
+                    <div class="restaurant-header">
+                        <h3>Bahar Café</h3>
+                        <div class="restaurant-rating">
+                            <i class="fas fa-star"></i> 4.3/5
+                        </div>
+                    </div>
+                    <div class="restaurant-body">
+                        <div class="restaurant-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>2nd Lane, Main Road, Kadapa</span>
+                        </div>
+                        <div class="restaurant-info">
+                            <i class="fas fa-clock"></i>
+                            <span>10:00 AM - 11:00 PM</span>
+                        </div>
+                        <div class="menu-highlights">
+                            <h4>Menu Highlights</h4>
+                            <div class="menu-items">
+                                <span class="menu-item">Chicken 65</span>
+                                <span class="menu-item">Paneer 65</span>
+                                <span class="menu-item">Sandwiches</span>
+                                <span class="menu-item">Milkshakes</span>
+                                <span class="menu-item">Fresh Juices</span>
+                            </div>
+                        </div>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Book Table</a>
+                    </div>
+                </div>
+                
+                <!-- Barbeque Nation -->
+                <div class="restaurant-card" data-category="multi" data-aos="fade-up" data-aos-delay="300">
+                    <div class="restaurant-header">
+                        <h3>Barbeque Nation</h3>
+                        <div class="restaurant-rating">
+                            <i class="fas fa-star"></i> 4.2/5
+                        </div>
+                    </div>
+                    <div class="restaurant-body">
+                        <div class="restaurant-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>KIA Road, Kadapa</span>
+                        </div>
+                        <div class="restaurant-info">
+                            <i class="fas fa-clock"></i>
+                            <span>12:00 PM - 11:00 PM</span>
+                        </div>
+                        <div class="menu-highlights">
+                            <h4>Menu Highlights</h4>
+                            <div class="menu-items">
+                                <span class="menu-item">Live Grill</span>
+                                <span class="menu-item">Chicken Tikka</span>
+                                <span class="menu-item">Paneer Tikka</span>
+                                <span class="menu-item">Mutton Kebabs</span>
+                                <span class="menu-item">Buffet Spread</span>
+                            </div>
+                        </div>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Book Table</a>
+                    </div>
+                </div>
+                
+                <!-- Andhra Spice Family Restaurant -->
+                <div class="restaurant-card" data-category="andhra" data-aos="fade-up" data-aos-delay="400">
+                    <div class="restaurant-header">
+                        <h3>Andhra Spice Family Restaurant</h3>
+                        <div class="restaurant-rating">
+                            <i class="fas fa-star"></i> 4.1/5
+                        </div>
+                    </div>
+                    <div class="restaurant-body">
+                        <div class="restaurant-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>R.S. Road, Kadapa</span>
+                        </div>
+                        <div class="restaurant-info">
+                            <i class="fas fa-clock"></i>
+                            <span>11:00 AM - 11:00 PM</span>
+                        </div>
+                        <div class="menu-highlights">
+                            <h4>Menu Highlights</h4>
+                            <div class="menu-items">
+                                <span class="menu-item">Special Andhra Biryanis</span>
+                                <span class="menu-item">Andhra Chicken Curry</span>
+                                <span class="menu-item">Natu Kodi Curry</span>
+                                <span class="menu-item">Vegetarian Thalis</span>
+                                <span class="menu-item">Rayalaseema Specials</span>
+                            </div>
+                        </div>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Book Table</a>
+                    </div>
+                </div>
+                
+                <!-- Aroma Spices -->
+                <div class="restaurant-card" data-category="multi" data-aos="fade-up" data-aos-delay="500">
+                    <div class="restaurant-header">
+                        <h3>Aroma Spices Multicuisine Train Restaurant</h3>
+                        <div class="restaurant-rating">
+                            <i class="fas fa-star"></i> 4.0/5
+                        </div>
+                    </div>
+                    <div class="restaurant-body">
+                        <div class="restaurant-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Railway Station Rd, Maria Puram, Kadapa</span>
+                        </div>
+                        <div class="restaurant-info">
+                            <i class="fas fa-clock"></i>
+                            <span>11:30 AM - 10:30 PM</span>
+                        </div>
+                        <div class="menu-highlights">
+                            <h4>Menu Highlights</h4>
+                            <div class="menu-items">
+                                <span class="menu-item">Chicken Dum Biryani</span>
+                                <span class="menu-item">Chicken 65</span>
+                                <span class="menu-item">Natukodi Vepudu</span>
+                                <span class="menu-item">Gongura Mamsam</span>
+                                <span class="menu-item">Lemon Chicken</span>
+                            </div>
+                        </div>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Book Table</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Accommodation Section -->
+    <section class="accommodation" id="accommodation">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Stay & Relax in Kadapa</h2>
+                <p>Find the perfect accommodation for your stay in Kadapa, from luxury hotels to budget-friendly options.</p>
+            </div>
+            
+            <div class="hotel-grid">
+                <!-- Hotel 1 -->
+                <div class="hotel-card" data-aos="fade-up">
+                    <div class="hotel-image">
+                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Hotel Kadapa Grand">
+                    </div>
+                    <div class="hotel-content">
+                        <div class="hotel-header">
+                            <h3>Hotel Kadapa Grand</h3>
+                            <div class="hotel-price">₹2,500/night</div>
+                        </div>
+                        <p>Centrally located luxury hotel with modern amenities, swimming pool, and multi-cuisine restaurant. Perfect for business and leisure travelers.</p>
+                        <div class="hotel-amenities">
+                            <div class="amenity"><i class="fas fa-wifi"></i> Free WiFi</div>
+                            <div class="amenity"><i class="fas fa-swimming-pool"></i> Pool</div>
+                            <div class="amenity"><i class="fas fa-utensils"></i> Restaurant</div>
+                            <div class="amenity"><i class="fas fa-car"></i> Parking</div>
+                        </div>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 15px; display: inline-block;">Book Now</a>
+                    </div>
+                </div>
+                
+                <!-- Hotel 2 -->
+                <div class="hotel-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="hotel-image">
+                        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Rayalaseema Residency">
+                    </div>
+                    <div class="hotel-content">
+                        <div class="hotel-header">
+                            <h3>Rayalaseema Residency</h3>
+                            <div class="hotel-price">₹1,800/night</div>
+                        </div>
+                        <p>Comfortable mid-range hotel with traditional Andhra hospitality. Features spacious rooms, conference facilities, and authentic local cuisine restaurant.</p>
+                        <div class="hotel-amenities">
+                            <div class="amenity"><i class="fas fa-wifi"></i> Free WiFi</div>
+                            <div class="amenity"><i class="fas fa-conference"></i> Conference</div>
+                            <div class="amenity"><i class="fas fa-utensils"></i> Restaurant</div>
+                            <div class="amenity"><i class="fas fa-tv"></i> TV</div>
+                        </div>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 15px; display: inline-block;">Book Now</a>
+                    </div>
+                </div>
+                
+                <!-- Hotel 3 -->
+                <div class="hotel-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="hotel-image">
+                        <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Budget Stay Inn">
+                    </div>
+                    <div class="hotel-content">
+                        <div class="hotel-header">
+                            <h3>Budget Stay Inn</h3>
+                            <div class="hotel-price">₹800/night</div>
+                        </div>
+                        <p>Affordable accommodation with clean rooms, 24-hour reception, and basic amenities. Ideal for budget travelers and backpackers.</p>
+                        <div class="hotel-amenities">
+                            <div class="amenity"><i class="fas fa-wifi"></i> Free WiFi</div>
+                            <div class="amenity"><i class="fas fa-shower"></i> Hot Water</div>
+                            <div class="amenity"><i class="fas fa-luggage"></i> Luggage Storage</div>
+                            <div class="amenity"><i class="fas fa-coffee"></i> Breakfast</div>
+                        </div>
+                        <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 15px; display: inline-block;">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="statistics">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Kadapa in Numbers</h2>
+                <p>Experience the vibrant culture and heritage through these fascinating statistics.</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-number" data-target="25">0</div>
+                    <p>Historical Sites</p>
+                </div>
+                
+                <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-number" data-target="50">0</div>
+                    <p>Local Dishes</p>
+                </div>
+                
+                <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-number" data-target="120">0</div>
+                    <p>Hotels & Stays</p>
+                </div>
+                
+                <div class="stat-item" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stat-number" data-target="15">0</div>
+                    <p>Unique Experiences</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experiences Section -->
+    <section class="experiences" id="experiences">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Unique Experiences in Kadapa</h2>
+                <p>Create unforgettable memories with these curated experiences in and around Kadapa.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon">
+                        <i class="fas fa-hiking"></i>
+                    </div>
+                    <h3>Gandikota Canyon Trek</h3>
+                    <p>Experience the breathtaking views of the "Grand Canyon of India" with guided trekking tours along the Pennar River gorge.</p>
+                    <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Book Experience</a>
+                </div>
+                
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Andhra Cooking Class</h3>
+                    <p>Learn to cook authentic Andhra dishes from local chefs. Experience the traditional cooking methods and spice blends.</p>
+                    <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Book Experience</a>
+                </div>
+                
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon">
+                        <i class="fas fa-pray"></i>
+                    </div>
+                    <h3>Temple Heritage Tour</h3>
+                    <p>Explore the ancient temples of Kadapa with expert guides explaining the history, architecture, and spiritual significance.</p>
+                    <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Book Experience</a>
+                </div>
+                
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3>Photography Expedition</h3>
+                    <p>Capture the beauty of Kadapa's landscapes, architecture, and culture with professional photography guides.</p>
+                    <a href="#" class="cta-button" style="padding: 10px 25px; margin-top: 20px; display: inline-block;">Book Experience</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <div class="footer-logo">
+                        <i class="fas fa-map-marked-alt"></i> Kadapa
+                    </div>
+                    <p class="footer-description">Your ultimate guide to exploring the rich heritage, culture, and flavors of Kadapa, Andhra Pradesh.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links-section">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#hero">Home</a></li>
+                        <li><a href="#historical">Historical Sites</a></li>
+                        <li><a href="#cuisine">Food & Cuisine</a></li>
+                        <li><a href="#accommodation">Hotels & Stays</a></li>
+                        <li><a href="#experiences">Experiences</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-contact">
+                    <h3 class="footer-heading">Contact Info</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Kadapa, Andhra Pradesh, India</li>
+                        <li><i class="fas fa-phone"></i> +91 9876543210</li>
+                        <li><i class="fas fa-envelope"></i> info@kadapaexplore.com</li>
+                    </ul>
+                </div>
+                
+                <div class="newsletter">
+                    <h3 class="footer-heading">Newsletter</h3>
+                    <p>Subscribe to get updates on new places and offers in Kadapa.</p>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <input type="email" placeholder="Your Email" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Kadapa Exploration Portal. All rights reserved. | Designed for College Competition</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://unpkg.com/three@0.132.2/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/swiper@9.0.0/swiper-bundle.min.js"></script>
+    
+    <script>
+        // Initialize AOS (Animate on Scroll)
+        AOS.init({
+            duration: 1000,
+            once: false,
+            offset: 100
+        });
+
+        // Page transition
+        const pageTransition = document.getElementById('pageTransition');
+        
+        // Simulate page load animation
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                pageTransition.classList.remove('active');
+            }, 800);
+        });
+
+        // Typed.js initialization for typing animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const typed = new Typed('#typed', {
+                strings: [
+                    "Where Heritage Meets Flavor",
+                    "Ancient Temples & Forts",
+                    "Authentic Andhra Cuisine",
+                    "Breathtaking Landscapes",
+                    "Unforgettable Experiences"
+                ],
+                typeSpeed: 50,
+                backSpeed: 30,
+                backDelay: 2000,
+                startDelay: 500,
+                loop: true,
+                showCursor: true,
+                cursorChar: '|'
+            });
+        });
+
+        // Particles.js for background
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS("particles-js", {
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#d4af37"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": true,
+                        "anim": {
+                            "enable": true,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true,
+                        "anim": {
+                            "enable": true,
+                            "speed": 2,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#d4af37",
+                        "opacity": 0.2,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 1,
+                        "direction": "none",
+                        "random": true,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 140,
+                            "line_linked": {
+                                "opacity": 0.5
+                            }
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+        });
+
+        // 3D Globe with Three.js
+        document.addEventListener('DOMContentLoaded', function() {
+            const globeContainer = document.getElementById('globeCanvas');
+            
+            // Scene setup
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, globeContainer.clientWidth / globeContainer.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ 
+                canvas: globeContainer,
+                alpha: true,
+                antialias: true 
+            });
+            
+            renderer.setSize(globeContainer.clientWidth, globeContainer.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            
+            // Create Earth sphere
+            const geometry = new THREE.SphereGeometry(5, 64, 64);
+            
+            // Create texture (simplified - in real implementation use actual Earth texture)
+            const texture = new THREE.MeshPhongMaterial({
+                color: 0x2c5530,
+                shininess: 5,
+                specular: 0x222222
+            });
+            
+            const earth = new THREE.Mesh(geometry, texture);
+            scene.add(earth);
+            
+            // Add clouds layer
+            const cloudsGeometry = new THREE.SphereGeometry(5.1, 64, 64);
+            const cloudsMaterial = new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.3
+            });
+            const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
+            scene.add(clouds);
+            
+            // Add atmosphere
+            const atmosphereGeometry = new THREE.SphereGeometry(5.2, 64, 64);
+            const atmosphereMaterial = new THREE.MeshPhongMaterial({
+                color: 0xd4af37,
+                transparent: true,
+                opacity: 0.1
+            });
+            const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+            scene.add(atmosphere);
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(5, 3, 5);
+            scene.add(directionalLight);
+            
+            // Add a marker for Kadapa
+            const markerGeometry = new THREE.SphereGeometry(0.1, 16, 16);
+            const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+            const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+            
+            // Position marker for India (simplified)
+            marker.position.set(2, 1, 1);
+            scene.add(marker);
+            
+            // Add a glow effect to the marker
+            const glowGeometry = new THREE.SphereGeometry(0.15, 16, 16);
+            const glowMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0xff0000, 
+                transparent: true, 
+                opacity: 0.5 
+            });
+            const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+            glow.position.set(2, 1, 1);
+            scene.add(glow);
+            
+            // Position camera
+            camera.position.z = 15;
+            
+            // Add controls
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.rotateSpeed = 0.5;
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Rotate Earth
+                earth.rotation.y += 0.001;
+                clouds.rotation.y += 0.0015;
+                
+                // Pulsate marker glow
+                const time = Date.now() * 0.001;
+                glow.scale.setScalar(1 + 0.2 * Math.sin(time * 3));
+                
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                camera.aspect = globeContainer.clientWidth / globeContainer.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(globeContainer.clientWidth, globeContainer.clientHeight);
+            });
+            
+            animate();
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+            this.innerHTML = document.getElementById('navLinks').classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+
+        // Restaurant tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const restaurantCards = document.querySelectorAll('.restaurant-card');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                tabBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const category = this.getAttribute('data-category');
+                
+                // Show/hide restaurant cards based on category
+                restaurantCards.forEach(card => {
+                    if (category === 'all' || card.getAttribute('data-category') === category) {
+                        card.style.display = 'block';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 10);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // Animated counter for statistics
+        function animateCounter() {
+            const counters = document.querySelectorAll('.stat-number');
+            const speed = 200; // The lower the slower
+            
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    
+                    const inc = target / speed;
+                    
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc);
+                        setTimeout(updateCount, 1);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                
+                updateCount();
+            });
+        }
+
+        // Trigger counter animation when section is in view
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.3
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe statistics section
+        const statisticsSection = document.querySelector('.statistics');
+        if (statisticsSection) {
+            observer.observe(statisticsSection);
+        }
+
+        // Newsletter form submission
+        document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input[type="email"]').value;
+            
+            // Show success message
+            alert(`Thank you for subscribing with ${email}! You'll receive updates on Kadapa soon.`);
+            this.reset();
+            
+            // In a real application, you would send this to a backend
+            console.log('Newsletter subscription:', email);
+            
+            // Store in localStorage for demo
+            let subscriptions = JSON.parse(localStorage.getItem('newsletterSubscriptions')) || [];
+            subscriptions.push({email, date: new Date().toISOString()});
+            localStorage.setItem('newsletterSubscriptions', JSON.stringify(subscriptions));
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if (this.getAttribute('href') === '#') return;
+                
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    document.getElementById('navLinks').classList.remove('active');
+                    document.getElementById('mobileMenuBtn').innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const hero = document.getElementById('hero');
+            
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Initialize localStorage for the application
+        function initializeAppData() {
+            // Initialize booking data if not exists
+            if (!localStorage.getItem('bookings')) {
+                localStorage.setItem('bookings', JSON.stringify({
+                    hotels: [],
+                    restaurants: [],
+                    tours: [],
+                    transport: []
+                }));
+            }
+            
+            // Initialize user data if not exists
+            if (!localStorage.getItem('users')) {
+                localStorage.setItem('users', JSON.stringify({
+                    currentUser: null,
+                    registered: []
+                }));
+            }
+            
+            // Initialize reviews if not exists
+            if (!localStorage.getItem('reviews')) {
+                localStorage.setItem('reviews', JSON.stringify([]));
+            }
+        }
+
+        // Initialize app data on load
+        initializeAppData();
+
+        // Easter egg: Konami code for surprise
+        const konamiCode = [
+            'ArrowUp', 'ArrowUp',
+            'ArrowDown', 'ArrowDown',
+            'ArrowLeft', 'ArrowRight',
+            'ArrowLeft', 'ArrowRight',
+            'b', 'a'
+        ];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                
+                if (konamiIndex === konamiCode.length) {
+                    // Konami code entered correctly
+                    alert('🎉 Congratulations! You found the secret Kadapa special feature! 🎉\n\nYou now have access to exclusive virtual tours!');
+                    
+                    // Reset index
+                    konamiIndex = 0;
+                    
+                    // In a full implementation, this would unlock special features
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        // Booking system simulation
+        document.querySelectorAll('.cta-button').forEach(button => {
+            if (button.textContent.includes('Book')) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    let bookingType = '';
+                    let itemName = '';
+                    
+                    if (this.closest('.restaurant-card')) {
+                        bookingType = 'restaurant';
+                        itemName = this.closest('.restaurant-card').querySelector('h3').textContent;
+                    } else if (this.closest('.hotel-card')) {
+                        bookingType = 'hotel';
+                        itemName = this.closest('.hotel-card').querySelector('h3').textContent;
+                    } else if (this.closest('.feature-card')) {
+                        bookingType = 'experience';
+                        itemName = this.closest('.feature-card').querySelector('h3').textContent;
+                    }
+                    
+                    // Create booking modal
+                    const modal = document.createElement('div');
+                    modal.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0,0,0,0.8);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 99999;
+                        backdrop-filter: blur(5px);
+                    `;
+                    
+                    modal.innerHTML = `
+                        <div style="background: white; padding: 40px; border-radius: 20px; max-width: 500px; width: 90%; position: relative;">
+                            <button style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--secondary);">&times;</button>
+                            <h3 style="color: var(--secondary); margin-bottom: 20px;">Book ${itemName}</h3>
+                            <form id="bookingForm">
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; margin-bottom: 8px; color: var(--secondary);">Name</label>
+                                    <input type="text" required style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px;">
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; margin-bottom: 8px; color: var(--secondary);">Email</label>
+                                    <input type="email" required style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px;">
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; margin-bottom: 8px; color: var(--secondary);">Date</label>
+                                    <input type="date" required style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px;">
+                                </div>
+                                <div style="margin-bottom: 30px;">
+                                    <label style="display: block; margin-bottom: 8px; color: var(--secondary);">Time</label>
+                                    <input type="time" required style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px;">
+                                </div>
+                                <button type="submit" style="background: var(--gradient); color: white; padding: 15px 30px; border: none; border-radius: 50px; font-weight: 600; cursor: pointer; width: 100%;">Confirm Booking</button>
+                            </form>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(modal);
+                    
+                    // Close modal
+                    modal.querySelector('button').addEventListener('click', () => {
+                        document.body.removeChild(modal);
+                    });
+                    
+                    // Handle form submission
+                    modal.querySelector('#bookingForm').addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        
+                        // Get booking data
+                        const bookings = JSON.parse(localStorage.getItem('bookings'));
+                        const newBooking = {
+                            type: bookingType,
+                            item: itemName,
+                            name: modal.querySelector('input[type="text"]').value,
+                            email: modal.querySelector('input[type="email"]').value,
+                            date: modal.querySelector('input[type="date"]').value,
+                            time: modal.querySelector('input[type="time"]').value,
+                            id: Date.now()
+                        };
+                        
+                        bookings[bookingType + 's'].push(newBooking);
+                        localStorage.setItem('bookings', JSON.stringify(bookings));
+                        
+                        // Show confirmation
+                        alert(`✅ Booking confirmed for ${itemName}!\n\nDetails have been saved to your account.`);
+                        document.body.removeChild(modal);
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
